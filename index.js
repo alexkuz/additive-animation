@@ -99,6 +99,13 @@ var Animation = function (options) {
     return target;
   }
 
+  function hasActiveAnimation(time) {
+    for (var i = animationStack.length - 1; i >= 0; i--) {
+      var animation = animationStack[i];
+      if (animation.end >= time) { return true; }
+    }    
+  }
+
   function animationStep() {
     if (lastTargetState === null) { return; }
 
@@ -108,7 +115,7 @@ var Animation = function (options) {
 
     onRender(currentState);
 
-    if (currentState !== lastTargetState) {
+    if (hasActiveAnimation(time)) {
       frame = stepFunc(animationStep);
     } else {
       finish();
