@@ -24,7 +24,8 @@
   "homepage": "https://github.com/alexkuz/additive-animation",
   "devDependencies": {
     "chai": "^1.9.2",
-    "mocha": "^2.0.1"
+    "mocha": "^2.0.1",
+    "webpack": "^1.4.11"
   },
   "dependencies": {
     "raf": "^2.0.4"
