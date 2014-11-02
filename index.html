@@ -1,8 +1,132 @@
 <html>
   <head>
     <script src="additive-animation.min.js"></script>
+    <style>
+.flex-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-content: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.box {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  border: 1px solid #999;
+  margin: 20px 0;
+}
+
+.cat {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #000;
+  width: 30px;
+  height: 30px;
+  z-index: 2;
+}
+
+.cat::before {
+  position: absolute;
+  display: none;
+  border-radius: 5px;
+  border: 1px solid #CCC;
+  padding: 5px 10px;
+  content: "Meow!";
+  z-index: 3;
+  background: #FFF;
+  left: 25px;
+  bottom: 25px;
+}
+
+.cat[data-say="meow"]::before {
+  display: block;
+}
+
+.dot {
+  position: absolute;
+  background: #F00;
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+  z-index: 1;
+}
+
+.jump {
+  font-size: 24px;
+  padding: 5px 10px;
+}
+  </style>
   </head>
-  <body>
+  <body class="flex-container">
    <h1>Additive Animation</h1>
+   <div class="box">
+     <div class="dot" id="dot"></div>
+     <div class="cat" id="cat"></div>
+   </div>
+   <button class="jump" id="jump">Jump!</button>
+
+    <script>
+(function() {
+  var cat = document.getElementById('cat'),
+      dot = document.getElementById('dot'),
+      jump = document.getElementById('jump');
+
+  var animation = AdditiveAnimation({
+    onRender: function(state) {
+      cat.style.left = Math.round(state.left) + 'px';
+      cat.style.top = Math.round(state.top) + 'px';      
+    },
+
+    onFinish: function() {
+      cat.setAttribute('data-say', 'meow');
+      setTimeout(function () {
+        cat.removeAttribute('data-say');
+      }, 300);
+    }
+  });
+
+  jump.addEventListener('click', function() {
+    var fromState = {
+      top: cat.offsetTop,
+      left: cat.offsetLeft
+    };
+    var toState = {
+      top: Math.round(Math.random() * (400 - 30)),
+      left: Math.round(Math.random() * (400 - 30))
+    };
+
+    dot.style.left = (toState.left + 10) + 'px';
+    dot.style.top = (toState.top + 10) + 'px';
+
+    animation.animate(fromState, toState, 1000);
+  }, false);
+})();
+    </script>
   </body>
 </html>
