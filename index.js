@@ -1,26 +1,27 @@
 'use strict';
 
-var raf = require('raf'),
-    EasingFunctions = require('./EasingFunctions'),
-    isNode = typeof global !== "undefined" && {}.toString.call(global) == '[object global]',
+var EasingFunctions = require('./EasingFunctions'),
     noop = function() {};
 
 /**
- * 
+ * Animates object state, combining concurrent animations. It uses "Additive animation" algorithm, described here:
  *
+ * https://developer.apple.com/videos/wwdc/2014/#236
+ *
+ * Sample code:
+ *
+ *   function onRender(state) {
+ *     window.scrollTo(0, state.y);
+ *   }
+ *
+ *   var animation = Animation({ onRender: onRender });
+ *
+ *   animation.animate({ y: 0 }, { y: 1000 }, 'easeInOutQuad');
+ *
+ *   ...
+ *
+ *   animation.animate({ y: 1000 }, { y: 2000 }, 'linear');
  */
-
-function now() {
-  if (!isNode && window.performance && window.performance.now) {
-    return window.performance.now();
-  }
-
-  if (Date.now) {
-    return Date.now();
-  }
-
-  return new Date().getTime();
-}
 
 var Animation = function (options) {
   var frame = null,
@@ -34,11 +35,19 @@ var Animation = function (options) {
       fps = options.fps || 60,
       stepFunc;
 
-  if (isNode) {
-    enabledRAF = false;
-  }
+  stepFunc = enabledRAF && window.requestAnimationFrame || function(func) { setTimeout(func, 1000 / fps); };
 
-  stepFunc = enabledRAF ? raf : function(func) { setTimeout(func, 1000 / fps); };
+  function now() {
+    if (window.performance && window.performance.now) {
+      return window.performance.now();
+    }
+
+    if (Date.now) {
+      return Date.now();
+    }
+
+    return new Date().getTime();
+  }
 
   function isAnimating() {
     return !!lastTargetState;
@@ -55,8 +64,8 @@ var Animation = function (options) {
 
   function cancel() {
     if (lastTargetState !== null) {
-      if (enabledRAF) {
-        raf.cancel(frame);
+      if (enabledRAF && window.cancelAnimationFrame) {
+        window.cancelAnimationFrame(frame);
         frame = null;
       }
       onCancel();

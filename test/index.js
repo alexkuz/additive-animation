@@ -2,6 +2,14 @@ var Animation = require('../index'),
     expect = require('chai').expect;
 
 describe('#animate', function() {
+  before(function () {
+    global.window = require('global/window');
+  });
+
+  after(function () {
+    delete global.window;
+  });
+
   it('returns final state on finish', function(done) {
     var animation = new Animation({
       onFinish: function (finalState) {
