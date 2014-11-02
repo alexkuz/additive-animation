@@ -2,6 +2,11 @@
   <head>
     <script src="additive-animation.min.js"></script>
     <style>
+.body {
+  font-family: Helvetica, Arial;
+  color: rgb(46, 47, 51);
+}
+
 .flex-container {
   display: -webkit-box;
   display: -moz-box;
@@ -45,23 +50,25 @@
   position: absolute;
   left: 0;
   top: 0;
-  background: #000;
-  width: 30px;
-  height: 30px;
+  background-image: url(nyancat.gif);
+  background-position: 0 -20px;
+  width: 50px;
+  height: 50px;
   z-index: 2;
 }
 
 .cat::before {
   position: absolute;
   display: none;
-  border-radius: 5px;
+  border-radius: 5px 5px 5px 0;
   border: 1px solid #CCC;
-  padding: 5px 10px;
-  content: "Meow!";
+  padding: 3px 6px;
+  content: "Nyan!";
   z-index: 3;
   background: #FFF;
-  left: 25px;
-  bottom: 25px;
+  left: 50px;
+  bottom: 35px;
+  font-size: 14px;
 }
 
 .cat[data-say="meow"]::before {
@@ -75,6 +82,8 @@
   width: 10px;
   height: 10px;
   z-index: 1;
+  left: 45px;
+  top: 16px;
 }
 
 .jump {
@@ -83,7 +92,7 @@
 }
   </style>
   </head>
-  <body class="flex-container">
+  <body class="body flex-container">
    <h1>Additive Animation</h1>
    <div class="box">
      <div class="dot" id="dot"></div>
@@ -107,7 +116,7 @@
       cat.setAttribute('data-say', 'meow');
       setTimeout(function () {
         cat.removeAttribute('data-say');
-      }, 300);
+      }, 700);
     }
   });
 
@@ -117,12 +126,12 @@
       left: cat.offsetLeft
     };
     var toState = {
-      top: Math.round(Math.random() * (400 - 30)),
-      left: Math.round(Math.random() * (400 - 30))
+      top: Math.round(Math.random() * (400 - 50)),
+      left: Math.round(Math.random() * (400 - 50))
     };
 
-    dot.style.left = (toState.left + 10) + 'px';
-    dot.style.top = (toState.top + 10) + 'px';
+    dot.style.left = (toState.left + 45) + 'px';
+    dot.style.top = (toState.top + 16) + 'px';
 
     animation.animate(fromState, toState, 1000);
   }, false);
