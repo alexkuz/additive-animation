@@ -56,6 +56,21 @@
   -webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 
+.controls {
+  width: 400px;
+}
+
+@media (max-width: 420px) {
+  .box {
+    width: 260px;
+    height: 260px;
+  }
+
+  .controls {
+    width: 300px;
+  }
+}
+
 .cat {
   position: absolute;
   left: 0;
@@ -96,10 +111,6 @@
   top: 16px;
 }
 
-.controls {
-  width: 400px;
-}
-
 .jump {
   float: right;
   font-size: 16px;
@@ -133,7 +144,11 @@
   var cat = document.getElementById('cat'),
       dot = document.getElementById('dot'),
       jump = document.getElementById('jump'),
-      easing = document.getElementById('easing');
+      easing = document.getElementById('easing'),
+      box = document.getElementById('box'),
+      w = box.offsetWidth,
+      h = box.offsetHeight,
+      isTouchSupported = "ontouchend" in document;;
 
   var animation = AdditiveAnimation({
     onRender: function(state) {
@@ -163,30 +178,19 @@
 
   jump.addEventListener('click', function() {
     var toState = {
-      left: Math.round(Math.random() * (400 - 50)),
-      top: Math.round(Math.random() * (400 - 50))
+      left: Math.round(Math.random() * (w - 50)),
+      top: Math.round(Math.random() * (h - 50))
     };
 
     changeTarget(toState);
   }, false);
 
-  box.addEventListener('mousedown', function (e) {
+  box.addEventListener(isTouchSupported ? 'touchend' : 'mousedown', function (e) {
     if (e.target !== box) { return; }
     var toState = {
-      left: e.offsetX - 45 - 8,
-      top: e.offsetY - 16 - 8
+      left: (e.changedTouches ? (e.changedTouches[0].pageX - box.offsetLeft) : e.offsetX) - 45 - 8,
+      top: (e.changedTouches ? (e.changedTouches[0].pageY - box.offsetTop) : e.offsetY) - 16 - 8
     }
-
-    changeTarget(toState);
-  }, false);
-
-  box.addEventListener('touchend', function (e) {
-    if (e.target !== box) { return; }
-    var toState = {
-      left: e.offsetX - 45 - 8,
-      top: e.offsetY - 16 - 8
-    }
-
     changeTarget(toState);
   }, false);
 })();
