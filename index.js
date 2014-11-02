@@ -78,15 +78,22 @@ var Animation = function (options) {
   }
 
   function getCurrentState(time) {
-    var target = lastTargetState,
+    var target = {},
         animation,
-        remain;
+        remain,
+        key;
+
+    for (key in lastTargetState) {
+      target[key] = lastTargetState[key];
+    }
 
     for (var i = animationStack.length - 1; i >= 0; i--) {
       animation = animationStack[i];
       if (animation.end < time) { continue; }
       remain = (animation.end - time) / animation.duration;
-      target -= (animation.toY - animation.fromY) * animation.easing(remain);
+      for (key in target) {
+        target[key] -= (animation.toState[key] - animation.fromState[key]) * animation.easing(remain);
+      }
     }
 
     return target;
