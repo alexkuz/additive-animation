@@ -1,5 +1,6 @@
 <html>
   <head>
+    <script src="raf.js"></script>
     <script src="additive-animation.min.js"></script>
     <style>
 .body {
@@ -104,7 +105,7 @@
   </head>
   <body class="body flex-container">
     <h1>Additive Animation</h1>
-    <div class="box">
+    <div class="box" id="box">
       <div class="dot" id="dot"></div>
       <div class="cat" id="cat"></div>
     </div>
@@ -139,20 +140,45 @@
     }
   });
 
-  jump.addEventListener('click', function() {
+  function changeTarget(toState) {
     var fromState = {
       top: cat.offsetTop,
       left: cat.offsetLeft
-    };
-    var toState = {
-      top: Math.round(Math.random() * (400 - 50)),
-      left: Math.round(Math.random() * (400 - 50))
     };
 
     dot.style.left = (toState.left + 45) + 'px';
     dot.style.top = (toState.top + 16) + 'px';
 
     animation.animate(fromState, toState, 1000, easing.value);
+  }
+
+  jump.addEventListener('click', function() {
+    var toState = {
+      left: Math.round(Math.random() * (400 - 50)),
+      top: Math.round(Math.random() * (400 - 50))
+    };
+
+    changeTarget(toState);
+  }, false);
+
+  box.addEventListener('mousedown', function (e) {
+    if (e.target !== box) { return; }
+    var toState = {
+      left: e.offsetX - 45 - 8,
+      top: e.offsetY - 16 - 8
+    }
+
+    changeTarget(toState);
+  }, false);
+
+  box.addEventListener('touchend', function (e) {
+    if (e.target !== box) { return; }
+    var toState = {
+      left: e.offsetX - 45 - 8,
+      top: e.offsetY - 16 - 8
+    }
+
+    changeTarget(toState);
   }, false);
 })();
     </script>
