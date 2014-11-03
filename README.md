@@ -68,9 +68,11 @@ Name | Signature | Description
 **enabledRAF** | `bool` | Use `window.requestAnimationFrame` in animation loop. **True** by default. **Note**: if you use it, you should probably also use some polyfill, like this: https://github.com/cagosta/requestAnimationFrame
 **fps** | `number` | If RAF is disabled, `setTimeout` is used in animation loop. Here you can define frequency (**60** frames per second by default).
 
-#### animation.animate(fromState, toState, duration)
+#### animation.animate(fromState, toState, duration, easing)
 
 Animates object state. `fromState` and `toState` are expected to be the objects with number values, e.g. `{ x: 100, y: 200 }`. `duration` is animation duration in milliseconds.
+
+`easing` is a function used for easing. It could be a string (name of one of the functions described here: https://gist.github.com/gre/1650294 - for example, `'linear'` or `'easeInOutQuad'`) or your own function (assuming it's input and output values are in range `[0, 1]`). **'easeInOutQuad'** by default.
 
 #### animation.isAnimating()
 
