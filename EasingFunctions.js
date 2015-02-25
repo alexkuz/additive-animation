@@ -4,7 +4,7 @@
  *
  * https://gist.github.com/gre/1650294
  */
-EasingFunctions = {
+var EasingFunctions = {
   // no easing, no acceleration
   linear: function (t) { return t; },
   // accelerating from zero velocity
